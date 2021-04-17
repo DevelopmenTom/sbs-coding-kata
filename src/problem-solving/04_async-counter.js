@@ -8,3 +8,18 @@
  * @param {function(number): void} callback - Called after each 100ms with an increment
  * @returns {function(): void} - Cancel countdown function
  */
+
+export const count = (startCount, endCount, callback) => {
+  let current = startCount
+
+  const interval = setInterval(() => {
+    if (current > endCount) {
+      clearInterval(interval)
+      return
+    }
+    callback(current)
+    current++
+  }, 100)
+
+  return () => clearInterval(interval)
+}
