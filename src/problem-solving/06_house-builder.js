@@ -23,24 +23,78 @@
  * See the test to find the charakters to use and to answer your questions.
  */
 
+const addDoor = (doorHeight, extraHeight, extraWidth) => {
+  const spreadEven = extraWidth % 2 === 0
+  const halfExtra = extraWidth / 2
+  const beforeDoor = spreadEven ? halfExtra : Math.ceil(halfExtra)
+  const afterDoor = spreadEven ? halfExtra : Math.floor(halfExtra)
+
+  let door = ''
+
+  if (extraHeight) {
+    for (let i = 1; i <= extraHeight; i++) {
+      door =
+        door +
+        '|' +
+        ' '.repeat(beforeDoor) +
+        '   ' +
+        ' '.repeat(afterDoor) +
+        '|\n'
+    }
+  }
+
+  for (let i = doorHeight; i > 0; i--) {
+    if (i === doorHeight) {
+      door =
+        door +
+        '|' +
+        ' '.repeat(beforeDoor) +
+        ' _ ' +
+        ' '.repeat(afterDoor) +
+        '|\n'
+      continue
+    }
+
+    if (i === 1) {
+      door =
+        door +
+        '|' +
+        '_'.repeat(beforeDoor) +
+        '| |' +
+        '_'.repeat(afterDoor) +
+        '|'
+      continue
+    }
+
+    door =
+      door +
+      '|' +
+      ' '.repeat(beforeDoor) +
+      '| |' +
+      ' '.repeat(afterDoor) +
+      '|\n'
+  }
+  return door
+}
+
 const addRoof = (width) => {
   let roof = ''
-  let rooftSteps = [...Array(width + 1).keys()].filter((item) => item > 0)
+  let roofSteps = [...Array(width + 1).keys()].filter((item) => item > 0)
   let roofTop
   if (width % 2 !== 0) {
-    rooftSteps = rooftSteps.filter((item) => item % 2 !== 0)
+    roofSteps = roofSteps.filter((item) => item % 2 !== 0)
     roofTop = '^\n'
   } else {
-    rooftSteps = rooftSteps.filter((item) => item % 2 === 0)
+    roofSteps = roofSteps.filter((item) => item % 2 === 0)
     roofTop = '/\\\n'
   }
-  roof = roof + ' '.repeat(rooftSteps.length) + roofTop
-  for (let i = 1; i <= rooftSteps.length; i++) {
+  roof = roof + ' '.repeat(roofSteps.length) + roofTop
+  for (let i = 1; i <= roofSteps.length; i++) {
     roof =
       roof +
-      ' '.repeat(rooftSteps.length - i) +
+      ' '.repeat(roofSteps.length - i) +
       '/' +
-      ' '.repeat(rooftSteps[i - 1]) +
+      ' '.repeat(roofSteps[i - 1]) +
       '\\\n'
   }
   return roof
@@ -75,7 +129,16 @@ const house = (height = 3, width) => {
     return product + buildWithoutDoor(height, width)
   }
 
-  return product
+  const windowsHeight = 2
+  const windowWidth = 3
+  const placeForWindows =
+    height - minDoorHeight - windowsHeight > 0 && width >= windowWidth * 2 + 3
+
+  const doorHeight =
+    height - (placeForWindows ? windowsHeight : 0) === 2 ? 2 : 3
+  const extraWidth = width - doorWidth
+  const extraHeight = placeForWindows ? 0 : height - doorHeight
+  return product + addDoor(doorHeight, extraHeight, extraWidth)
 }
 
 export default house
