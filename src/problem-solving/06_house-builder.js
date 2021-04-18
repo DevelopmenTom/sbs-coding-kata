@@ -35,7 +35,7 @@ const addRoof = (width) => {
     roofTop = '/\\\n'
   }
   roof = roof + ' '.repeat(rooftSteps.length) + roofTop
-  for (let i = 1; i < rooftSteps.length + 1; i++) {
+  for (let i = 1; i <= rooftSteps.length; i++) {
     roof =
       roof +
       ' '.repeat(rooftSteps.length - i) +
@@ -46,6 +46,18 @@ const addRoof = (width) => {
   return roof
 }
 
+const buildWithoutDoor = (height, width) => {
+  let build = ''
+  for (let i = height; i > 0; i--) {
+    if (i === 1) {
+      build = build + '|' + '_'.repeat(width) + '|'
+      continue
+    }
+    build = build + '|' + ' '.repeat(width) + '|\n'
+  }
+  return build
+}
+
 const house = (height = 3, width) => {
   if (!width) {
     width = height
@@ -54,6 +66,14 @@ const house = (height = 3, width) => {
   let product = '\n'
 
   product = product + addRoof(width)
+
+  const doorWidth = 3
+  const minDoorHeight = 2
+  const placeForDoor = height >= minDoorHeight && width >= doorWidth
+
+  if (!placeForDoor) {
+    return product + buildWithoutDoor(height, width)
+  }
 
   return product
 }
