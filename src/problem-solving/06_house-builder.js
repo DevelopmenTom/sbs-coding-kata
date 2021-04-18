@@ -22,3 +22,40 @@
  * Please implement it generic, not just to fulfill the test.
  * See the test to find the charakters to use and to answer your questions.
  */
+
+const addRoof = (width) => {
+  let roof = ''
+  let rooftSteps = [...Array(width + 1).keys()].filter((item) => item > 0)
+  let roofTop
+  if (width % 2 !== 0) {
+    rooftSteps = rooftSteps.filter((item) => item % 2 !== 0)
+    roofTop = '^\n'
+  } else {
+    rooftSteps = rooftSteps.filter((item) => item % 2 === 0)
+    roofTop = '/\\\n'
+  }
+  roof = roof + ' '.repeat(rooftSteps.length) + roofTop
+  for (let i = 1; i < rooftSteps.length + 1; i++) {
+    roof =
+      roof +
+      ' '.repeat(rooftSteps.length - i) +
+      '/' +
+      ' '.repeat(rooftSteps[i - 1]) +
+      '\\\n'
+  }
+  return roof
+}
+
+const house = (height = 3, width) => {
+  if (!width) {
+    width = height
+  }
+
+  let product = '\n'
+
+  product = product + addRoof(width)
+
+  return product
+}
+
+export default house
